@@ -3,7 +3,7 @@ const cors = require("cors");
 const { join } = require("path");
 const listEndpoints = require("express-list-endpoints");
 const mongoose = require("mongoose");
-const http = require("http");
+const http = require("http"); // module included in node.js
 
 const createSocketServer = require("./socket");
 

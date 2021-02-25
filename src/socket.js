@@ -1,4 +1,5 @@
 const socketio = require("socket.io");
+const { addUserToRoom } = require("./utils/users");
 
 // function to crerate a server
 const createSocketServer = (server) => {
@@ -9,7 +10,25 @@ const createSocketServer = (server) => {
   // emit method sends events
   io.on("connection", (socket) => {
     // a new socket will come and it will be handled by this function
-    console.log(`A user connected wirh id: ${socket.id}`);
+    console.log(`A user connected with id: ${socket.id}`);
+
+    socket.on("joinRoom", async (data) => {
+      try {
+        // add user to specified room (in mongo db)
+        const { username, room } = await addUserToRoom({
+          socketId: socket.id,
+          ...data,
+        });
+        // join is a method to join rooms
+        socket.join(room);
+      } catch (error) {
+        console.log(error);
+      }
+    }); // when users join the chat room
+
+    socket.on("sendMessage", (msg) => {}); // when users send messages
+
+    socket.on("leaveRoom", (room) => {}); // when a user leaves a chat room
   });
 };
 
